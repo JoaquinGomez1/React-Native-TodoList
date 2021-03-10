@@ -33,17 +33,20 @@ const reducer = function (state, action) {
       if (state.showChecked) {
         return {
           ...state,
-          displayTodos: [...state.displayTodos].filter((todo) => todo.checked),
+          displayTodos: [...state.displayTodos].filter((todo) => !todo.checked),
         };
       }
       return { ...state, displayTodos: state.todos };
     }
 
     case "deleteTodo": {
-      state.todos.splice(action.payload, 1);
-      state.displayTodos.splice(action.payload, 1);
+      // payload = index
+      const todosCopy = [...state.todos];
+      const displayTodosCopy = [...state.displayTodos];
+      todosCopy.splice(action.payload, 1);
+      displayTodosCopy.splice(action.payload, 1);
 
-      return { ...state };
+      return { ...state, todos: todosCopy, displayTodos: displayTodosCopy };
     }
     default: {
       return state;

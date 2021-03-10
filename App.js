@@ -1,8 +1,10 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useReducer } from "react";
-import { StyleSheet, Text, View, TextInput, ScrollView } from "react-native";
+import { StyleSheet, Text, View, TextInput } from "react-native";
 import Button from "./components/Button";
 import reducer from "./reducers/todosReducer";
+import Head from "./components/Head";
+import Todos from "./components/Todos";
 
 const initialState = {
   inputField: "",
@@ -16,11 +18,13 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      <Head />
       <Text style={styles.logo}>Todoist</Text>
+      <Todos state={state} dispatch={dispatch} />
       <TextInput
         style={{
           height: 40,
-          minWidth: 180,
+          minWidth: 280,
           borderRadius: 8,
           borderColor: "gray",
           borderWidth: 1,
@@ -38,25 +42,9 @@ export default function App() {
           onPress={() => dispatch({ type: "add" })}
         />
       </View>
-      <ScrollView style={styles.todoContainer}>
-        {state.displayTodos.map((todo, index) => (
-          <Text
-            style={
-              todo.checked
-                ? { ...styles.todo, color: "#0f0" }
-                : { ...styles.todo, color: "#000" }
-            }
-            key={todo.text}
-            onLongPress={() => dispatch({ type: "deleteTodo", payload: index })}
-            onPress={() => dispatch({ type: "checked", payload: index })}
-          >
-            {todo.text}
-          </Text>
-        ))}
-      </ScrollView>
       <View styles={styles.buttonContainer}>
         <Button
-          title={state.showChecked ? "Show all" : "Show checked"}
+          title={state.showChecked ? "Show all" : "Show not completed"}
           styles={styles.appButtonContainer}
           onPress={() => dispatch({ type: "showChecked" })}
         />
@@ -74,7 +62,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "center",
+    paddingVertical: 80,
   },
   buttonContainer: {
     display: "flex",
@@ -84,19 +72,5 @@ const styles = StyleSheet.create({
   count: {
     fontSize: 40,
     fontWeight: "bold",
-  },
-  todoContainer: {
-    display: "flex",
-    padding: 8,
-    textAlign: "left",
-    maxHeight: 160,
-    marginVertical: 20,
-  },
-  todo: {
-    paddingHorizontal: 3,
-    fontSize: 25,
-    marginVertical: 10,
-    backgroundColor: "#fafaf6",
-    borderRadius: 8,
   },
 });
